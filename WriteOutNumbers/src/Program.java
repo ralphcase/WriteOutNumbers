@@ -21,6 +21,7 @@ public class Program {
 		// System.out.println(compose(input));
 		// sc.close();
 		sortNumbersAlphabetically(MAX_VALUE);
+//		System.out.println(firstWord());
 	}
 
 	
@@ -33,6 +34,19 @@ public class Program {
 
 		for (String w : words)
 			System.out.println(w);
+	}
+	
+	
+	public static String firstWord() {
+		int i = 0;
+		char target = 'a';
+		while (true) {
+			String word = compose(i);
+			if (word.indexOf(target)>0) {
+				return word;
+			}
+			i++;
+		}
 	}
 
 
