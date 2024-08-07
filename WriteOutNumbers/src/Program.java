@@ -5,13 +5,16 @@ import java.util.Scanner;
 public class Program {
 
 	public static final int MAX_VALUE = 1000000;
-	private static final String[] ONES = new String[] { "", "one", "two", "three", "four", "five", "six", "seven",
-			"eight", "nine" };
-	private static final String[] TEENS = new String[] { "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
-			"sixteen", "seventeen", "eighteen", "nineteen" };
-	private static final String[] TENS = new String[] { "", "", "twenty", "thirty", "forty", "fifty", "sixty",
-			"seventy", "eighty", "ninety" };
-	private static final String[] ORDERS = new String[] { "", "thousand", "million", "billion", "trillion" };
+    private static final String[] ONES = new String[] { "", "one", "two", "three", "four", "five", "six", "seven",
+            "eight", "nine" };
+    private static final String[] TEENS = new String[] { "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+            "sixteen", "seventeen", "eighteen", "nineteen" };
+    private static final String[] TENS = new String[] { "", "", "twenty", "thirty", "forty", "fifty", "sixty",
+            "seventy", "eighty", "ninety" };
+    private static final String HUNDRED = "hundred";
+    private static final String ZERO = "zero";
+    private static final String SEPARATOR = "-";
+    private static final String[] ORDERS = new String[] { "", "thousand", "million", "billion", "trillion" };
 
 	
 	public static void main(String[] args) {
@@ -53,60 +56,64 @@ public class Program {
 	/*
 	 * Return the text representation of an integer.
 	 */
-	public static String compose(int input) {
-		String answer = "";
-		if (input == 0)
-			answer = "zero";
-		else {
-			int glob = 0;
-			while (input > 0) {
-				String text = threeDigit(input % 1000);
-				if (answer.length() > 0 && text.length() > 0)
-					answer = ", " + answer;
-				if (text.length() > 0)
-					answer = text + " " + ORDERS[glob] + answer;
-				input = input / 1000;
-				glob++;
-			}
-		}
-		return answer.trim();
+	public static String compose(int num) {
+        StringBuilder answer = new StringBuilder();
+        if (num == 0)
+            answer.append(ZERO);
+        else {
+            int glob = 0;
+            while (num > 0) {
+                String text = threeDigit(num % 1000);
+                if (answer.length() > 0 && text.length() > 0)
+                    answer.insert(0, ", ");
+                if (text.length() > 0) {
+                    answer.insert(0, ORDERS[glob]);
+                    answer.insert(0, ' ');
+                    answer.insert(0, text);
+                }
+                num = num / 1000;
+                glob++;
+            }
+        }
+        return answer.toString().trim();
 	}
 
 
 	/*
 	 * Return the text representation of a one-, two-, or three-digit integer.
 	 */
-	static String threeDigit(int input) {
-		String answer = "";
-		if (input >= 100) {
-			answer += oneDigit(input / 100);
-			answer += " hundred";
-			if (input % 100 != 0)
-				answer += " ";
-		}
-		answer += twoDigit(input % 100);
-		return answer;
-	}
+    static String threeDigit(int input) {
+        StringBuilder answer = new StringBuilder();
+        if (input >= 100) {
+            answer.append(oneDigit(input / 100));
+            answer.append(" ");
+            answer.append(HUNDRED);
+            if (input % 100 != 0)
+                answer.append(" ");
+        }
+        answer.append(twoDigit(input % 100));
+        return answer.toString();
+    }
 	
 	
 	/*
 	 * Return the text representation of a one- or two-digit integer.
 	 */
-	static String twoDigit(int input) {
-		String answer = "";
-		if (input < 10)
-			answer = oneDigit(input);
-		else if (input < 20)
-			answer = TEENS[input - 10];
-		else {
-			answer = TENS[input / 10];
-			if (input % 10 != 0) {
-				answer += "-";
-				answer += oneDigit(input % 10);
-			}
-		}
-		return answer;
-	}
+    static String twoDigit(int input) {
+        StringBuilder answer = new StringBuilder();
+        if (input < 10)
+            answer.append(oneDigit(input));
+        else if (input < 20)
+            answer.append(TEENS[input - 10]);
+        else {
+            answer.append(TENS[input / 10]);
+            if (input % 10 != 0) {
+                answer.append(SEPARATOR);
+                answer.append(oneDigit(input % 10));
+            }
+        }
+        return answer.toString();
+    }
 
 	
 	/*
